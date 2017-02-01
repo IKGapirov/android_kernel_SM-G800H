@@ -194,7 +194,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
 export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH		?= arm
 #CROSS_COMPILE	?= /opt/toolchains/arm-eabi-4.7/bin/arm-eabi-
-CROSS_COMPILE	?= /home/ikgapirov/Android/utility/gcc-linaro-4.9-2016.02-x86_64_arm-eabi/bin/arm-linux-android-
+CROSS_COMPILE	?= /home/ikgapirov/Android/utility/gcc-linaro-4.9-2016.02-x86_64_arm-eabi/bin/arm-eabi-
 
 
 
