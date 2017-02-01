@@ -5,8 +5,8 @@ if [ ! -d $(pwd)/output ];
 	mkdir $(pwd)/output; 
     fi
 
-make -C $(pwd) O=output msm8228-sec_atlantic3geur_defconfig
-make -j5 -C $(pwd) O=output
+make -C $(pwd) O=output msm8226-sec_defconfig VARIANT_DEFCONFIG=msm8228-sec_atlantic3geur_defconfig
+make -j3 -C $(pwd) O=output
 
 
 if [ ! -d $(pwd)/output/modules ]; 
