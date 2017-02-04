@@ -1,4 +1,4 @@
-# android_kernel
+# Unofficial KK 4.4.2 kernel for SM-G800H
 ################################################################################
 
 1. How to Build
