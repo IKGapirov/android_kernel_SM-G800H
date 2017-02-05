@@ -1,4 +1,4 @@
-/* Copyright (c) 2008-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2008-2014, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -33,7 +33,7 @@
  * needs to be rolled back once a solution is found to address the issue at hand
  */
 #if defined(CONFIG_SEC_MILLET_PROJECT) || defined(CONFIG_SEC_MATISSE_PROJECT) \
-		|| defined(CONFIG_SEC_AFYON_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT)
+		|| defined(CONFIG_SEC_AFYON_PROJECT)
 #define WAIT_FENCE_FIRST_TIMEOUT (0.5 * MSEC_PER_SEC)
 #define WAIT_FENCE_FINAL_TIMEOUT (1 * MSEC_PER_SEC)
 #else
@@ -100,12 +100,16 @@ struct msm_sync_pt_data {
 	int timeline_value;
 	u32 threshold;
 
+    u32 retire_threshold;
 	atomic_t commit_cnt;
 	bool flushed;
 	bool async_wait_fences;
 
 	struct mutex sync_mutex;
 	struct notifier_block notifier;
+
+	struct sync_fence *(*get_retire_fence)
+		(struct msm_sync_pt_data *sync_pt_data);
 };
 
 struct msm_fb_data_type;
@@ -223,10 +227,8 @@ struct msm_fb_data_type {
 	/* for non-blocking */
 	struct task_struct *disp_thread;
 	atomic_t commits_pending;
-	atomic_t kickoff_pending;
 	wait_queue_head_t commit_wait_q;
 	wait_queue_head_t idle_wait_q;
-	wait_queue_head_t kickoff_wait_q;
 	bool shutdown_pending;
 
 	struct msm_fb_backup_type msm_fb_backup;
@@ -235,7 +237,6 @@ struct msm_fb_data_type {
 
 	u32 dcm_state;
 	struct list_head proc_list;
-	u32 wait_for_kickoff;
 
 	int blank_mode;
 };
@@ -259,11 +260,11 @@ static inline void mdss_fb_update_notify_update(struct msm_fb_data_type *mfd)
 	}
 }
 #ifdef CONFIG_FB_MSM_CAMERA_CSC
-#if defined(CONFIG_MACH_KS01SKT) || defined(CONFIG_MACH_KS01EUR) || defined(CONFIG_MACH_KS01KTT) || defined(CONFIG_MACH_KS01LGT) || defined(CONFIG_SEC_ATLANTIC_PROJECT)
+#if defined(CONFIG_MACH_KS01SKT) || defined(CONFIG_MACH_KS01EUR) || defined(CONFIG_MACH_KS01KTT) || defined(CONFIG_MACH_KS01LGT)
 extern u8 prev_csc_update;
 #endif
 extern u8 csc_update;
-#if !defined(CONFIG_MACH_KS01SKT) && !defined(CONFIG_MACH_KS01EUR) && !defined(CONFIG_MACH_KS01KTT) && !defined(CONFIG_MACH_KS01LGT) && !defined(CONFIG_SEC_ATLANTIC_PROJECT)
+#if !defined(CONFIG_MACH_KS01SKT) && !defined(CONFIG_MACH_KS01EUR) && !defined(CONFIG_MACH_KS01KTT) && !defined(CONFIG_MACH_KS01LGT)
 extern u8 pre_csc_update;
 #endif
 #endif
@@ -304,6 +305,8 @@ void mdss_fb_set_backlight(struct msm_fb_data_type *mfd, u32 bkl_lvl);
 void mdss_fb_update_backlight(struct msm_fb_data_type *mfd);
 void mdss_fb_wait_for_fence(struct msm_sync_pt_data *sync_pt_data);
 void mdss_fb_signal_timeline(struct msm_sync_pt_data *sync_pt_data);
+struct sync_fence *mdss_fb_sync_get_fence(struct sw_sync_timeline *timeline,
+				const char *fence_name, int val);
 int mdss_fb_register_mdp_instance(struct msm_mdp_interface *mdp);
 #if defined(CONFIG_MDNIE_TFT_MSM8X26) || defined (CONFIG_FB_MSM_MDSS_S6E8AA0A_HD_PANEL) || defined(CONFIG_MDNIE_VIDEO_ENHANCED)
 void mdss_negative_color(int is_negative_on);
