@@ -5,8 +5,8 @@ if [ ! -d $(pwd)/output ];  then
     mkdir $(pwd)/output/modules;
 fi
 
-make -C $(pwd) O=output msm8226-sec_defconfig VARIANT_DEFCONFIG=msm8228-sec_atlantic3geur_defconfig
-make -j3 -C $(pwd) O=output
+make -C $(pwd) O=output cyanogenmod_kmini3g_defconfig
+make -j7 -C $(pwd) O=output
 cp output/arch/arm/boot/zImage output/arch/arm/boot/boot.img-kernel
 
 find $(pwd)/output -name '*.ko' -exec cp -fv {} $(pwd)/output/modules \;
