@@ -55,7 +55,7 @@
 #define WCNSS_PIL_DEVICE "wcnss"
 
 #define WAIT_FOR_CBC_IND     2
-+
+
 /* module params */
 #define WCNSS_CONFIG_UNSPECIFIED (-1)
 #define UINT32_MAX (0xFFFFFFFFU)
@@ -1130,6 +1130,12 @@ struct device *wcnss_wlan_get_device(void)
 	return NULL;
 }
 EXPORT_SYMBOL(wcnss_wlan_get_device);
+
+void wcnss_get_monotonic_boottime(struct timespec *ts)
+{
+	get_monotonic_boottime(ts);
+}
+EXPORT_SYMBOL(wcnss_get_monotonic_boottime);
 
 struct platform_device *wcnss_get_platform_device(void)
 {
