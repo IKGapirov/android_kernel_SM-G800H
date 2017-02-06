@@ -439,7 +439,7 @@ eHalStatus csrInitChannelsForCC(tpAniSirGlobal pMac, driver_load_type init)
             break;
         case REINIT:
 #ifdef FEATURE_WLAN_TDLS
-            OAvos_getCurrentCountryCode(&cc[0]);
+            vos_getCurrentCountryCode(&cc[0]);
 #endif
             status = csrGetRegulatoryDomainForCountry(pMac,
                      cc, &regId, COUNTRY_QUERY);
