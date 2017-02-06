@@ -452,7 +452,7 @@ limProcessAssocRspFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo, tANI_U8 sub
 
         return;
     }
-   
+
     // Get pointer to Re/Association Response frame body
     pBody = WDA_GET_RX_MPDU_DATA(pRxPacketInfo);
 
@@ -470,8 +470,10 @@ limProcessAssocRspFrame(tpAniSirGlobal pMac, tANI_U8 *pRxPacketInfo, tANI_U8 sub
     if(pAssocRsp->ExtCap.present)
     {
         limLog(pMac, LOGE, FL("Filling tdls prohibited in session entry"));
+#ifdef FEATURE_WLAN_TDLS
         psessionEntry->tdlsChanSwitProhibited =
                        pAssocRsp->ExtCap.TDLSChanSwitProhibited ;
+#endif
     }
     if(!pAssocRsp->suppRatesPresent)
     {
